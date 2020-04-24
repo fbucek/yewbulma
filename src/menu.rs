@@ -1,5 +1,4 @@
-#[derive(Default, Debug, Clone, PartialEq)] // serde_derive::Serialize, serde_derive::Deserialize)]
-// #[serde(default)]
+#[derive(Default, Debug, Clone, PartialEq)] 
 pub struct MenuItem {
     pub name: String,
     pub separator: bool,

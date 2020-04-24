@@ -1,6 +1,6 @@
 use yew::services::fetch::{FetchService, FetchTask, Request, Response};
 use yew::{Callback, format::{Nothing}};
-use anyhow::{anyhow, Error};
+use anyhow::anyhow;
 
 pub struct RequestManager {
     fetch_service: FetchService,
@@ -15,7 +15,7 @@ impl RequestManager {
         }
     }
 
-    pub fn get_url(&mut self, url: String, callback: Callback<Result<String, anyhow::Error>>) -> Result<(), Error>{
+    pub fn get_url(&mut self, url: String, callback: Callback<anyhow::Result<String>>) -> anyhow::Result<()>{
         let request_url = url.clone();
         let handler = move |response: Response<Result<String, anyhow::Error>>| {
             let (meta, data) = response.into_parts();
@@ -35,7 +35,7 @@ impl RequestManager {
     }
 
 
-    pub fn get_bin(&mut self, url: String, callback: Callback<Result<Vec<u8>, anyhow::Error>>) -> Result<(), Error>{
+    pub fn get_bin(&mut self, url: String, callback: Callback<Result<Vec<u8>, anyhow::Error>>) -> anyhow::Result<()>{
         let request_url = url.clone();
         let handler = move |response: Response<Result<Vec<u8>, anyhow::Error>>| {
             let (meta, data) = response.into_parts();
@@ -56,7 +56,7 @@ impl RequestManager {
     }
 
 
-    pub fn post(&mut self, url: String, body: String, callback: Callback<Result<String, anyhow::Error>>) -> Result<(), Error> {
+    pub fn post(&mut self, url: String, body: String, callback: Callback<anyhow::Result<String>>) -> anyhow::Result<()> {
         let request_url = url.clone();
         let handler = move |response: Response<Result<String, anyhow::Error>>| {
             let (meta, data) = response.into_parts();
