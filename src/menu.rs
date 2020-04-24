@@ -1,4 +1,6 @@
-#[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
 pub struct MenuItem {
     pub name: String,
