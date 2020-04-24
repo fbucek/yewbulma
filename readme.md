@@ -3,8 +3,7 @@
 
 Components for Yew in [Bulma CSS](https://bulma.io)
 
-[![pipeline status](https://github.com/fbucek/yewbulma/workflows/build/badge.svg)](https://github.com/fbucek/yewbulma/)
-
+[![build](https://github.com/fbucek/yewbulma/workflows/build/badge.svg)](https://github.com/fbucek/yewbulma/)
 
 # Development
 
