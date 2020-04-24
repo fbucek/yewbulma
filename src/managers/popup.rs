@@ -1,6 +1,18 @@
 use yew::prelude::*;
-use std::rc::Rc;
+use yew::services::{TimeoutService, Task };
 
+use yew::agent::Dispatcher;
+use yew::agent::Dispatched; // needed for ::dispatcher()
+
+use serde::{Deserialize, Serialize};
+use std::rc::Rc;
+use std::cell::RefCell;
+
+use std::time::Duration;
+
+use super::popup_bus;
+
+#[derive(Serialize, Deserialize)]
 pub struct PopupMessage {
     header: String,
     body: String,
@@ -14,33 +26,57 @@ impl PopupMessage {
 }
 
 pub struct PopupManager {
-    // link: ComponentLink<Self>,
-    messages: Vec<Rc<PopupMessage>>,
+    pub event_bus: Rc<RefCell<Dispatcher<popup_bus::EventBus>>>, //   
 }
 
 impl PopupManager {
     pub fn new() -> Self {
-
-        PopupManager {
-            messages: Vec::<Rc<PopupMessage>>::new(),
+        PopupManager { 
+            event_bus: Rc::new(RefCell::new(popup_bus::EventBus::dispatcher())),
         }
     }
+
+    pub fn info<T: Into<String>>(&self, header: T, body: Option<String>) {
+        let popup_message = PopupMessage::new_rc(
+            header.into(),
+            body.unwrap_or("".to_string()),
+            "has-background-info".into()
+        );
+        let mut bus = self.event_bus.borrow_mut();
+        bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
+    }
     
+    pub fn error<T: Into<String>>(&self, header: T, body: Option<String>) {
+        let popup_message = PopupMessage::new_rc(
+            header.into(),
+            body.unwrap_or("".to_string()),
+            "has-background-danger".into()
+        );
+        let mut bus = self.event_bus.borrow_mut();
+        bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
+    }
+}
+
+
+/// Popupmanager is connected using Agent link
+pub struct PopupManagerUI {
+    // Data
+    messages: Vec<Rc<PopupMessage>>,
+    // Timer
+    timer: TimeoutService,
+    timer_tasks: Vec<Box<dyn Task>>,
+    // Communication
+    link: ComponentLink<Self>,
+    _context: Box<dyn Bridge<popup_bus::EventBus>>,
+}
+
+impl PopupManagerUI {
     pub fn add_toast(&mut self, toast: Rc<PopupMessage>) {
         self.messages.push(toast);
     }
 
     pub fn remove_first(&mut self) {
         self.messages.remove(0);
-    }
-
-    pub fn view(&self) -> Html {
-        html! {
-            <div name="toasts" tag="div" class="c-toasts">
-            { self.view_children() }
-            //<toast class="toasts-item" v-for="toast in toasts" :toast="toast" :key="toast.id"></toast>
-            </div>
-        }
     }
 
     fn view_children(&self) -> Html {
@@ -61,7 +97,59 @@ impl PopupManager {
     }
 }
 
-
+#[derive(Serialize, Deserialize)]
 pub enum Msg {
-    TimeoutEvent,
+    NewMsg(Rc<PopupMessage>),
+    TimerDone,
+}
+
+impl Component for PopupManagerUI {
+    type Message = Msg;
+    type Properties = ();
+
+    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+        let timer = TimeoutService::new();
+        let callback = link.callback(|message| message);
+        let _context = popup_bus::EventBus::bridge(callback);
+
+        PopupManagerUI {
+            link,
+            timer,
+            messages: Vec::<Rc<PopupMessage>>::new(),
+            timer_tasks: Vec::new(),
+            _context,
+        }
+    }
+
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        true
+    }
+
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::NewMsg(message) => {
+                self.add_toast(message);
+                log::info!("New Popup messages XXXX");
+                let task = Box::new(self
+                    .timer
+                    .spawn(Duration::from_secs(3), self.link.callback(|_| Msg::TimerDone)));
+                
+                self.timer_tasks.push(task);
+            }
+            Msg::TimerDone => {
+                self.timer_tasks.remove(0);
+                self.remove_first();
+            }
+        }
+        true
+    }
+
+    fn view(&self) -> Html {
+        html! {
+            <div name="toasts" tag="div" class="c-toasts">
+            { self.view_children() }
+            //<toast class="toasts-item" v-for="toast in toasts" :toast="toast" :key="toast.id"></toast>
+            </div>
+        }
+    }
 }

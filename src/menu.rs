@@ -1,4 +1,5 @@
-#[derive(Default, Debug, Clone, PartialEq)] 
+#[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]
+#[serde(default)]
 pub struct MenuItem {
     pub name: String,
     pub separator: bool,
@@ -29,7 +30,6 @@ impl MenuItem {
 #[cfg(test)]
 mod tests {
     use super::*;
-    // TODO: change to wasm-test
 
     fn test_item(name: &str, link: Option<&str>, origin: &str, expected: &str) {
         let mut item = MenuItem::default();

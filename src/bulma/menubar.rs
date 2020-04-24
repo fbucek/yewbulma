@@ -116,6 +116,10 @@ impl Component for MenuBar {
         }
     }
 
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        true
+    }
+
     fn mounted(&mut self) -> ShouldRender {
         // Handle colapse 
         // -> when url match .link -> item.expanded = false/

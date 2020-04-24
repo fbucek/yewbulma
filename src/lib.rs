@@ -1,8 +1,11 @@
 #![recursion_limit = "1024"]
 
+extern crate serde_derive;
+
 pub mod bulma;
 pub mod managers;
 pub mod menu;
+pub mod core;
 
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;

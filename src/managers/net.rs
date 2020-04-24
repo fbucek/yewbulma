@@ -58,6 +58,7 @@ impl RequestManager {
 
     pub fn post(&mut self, url: String, body: String, callback: Callback<anyhow::Result<String>>) -> anyhow::Result<()> {
         let request_url = url.clone();
+        // Handler closure - will solve post request
         let handler = move |response: Response<Result<String, anyhow::Error>>| {
             let (meta, data) = response.into_parts();
             if meta.status.is_success() {
@@ -70,6 +71,8 @@ impl RequestManager {
                 callback.emit(err);
             }
         };
+
+        // Initiate request
         let request = Request::post(request_url.as_str())
             .header("Content-Type", "application/json")
             .body(Ok(body));

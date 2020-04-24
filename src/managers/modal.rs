@@ -4,7 +4,7 @@ use std::rc::Rc;
 pub struct ModalManager {
 }
 
-pub struct MoadlComponent {
+pub struct ModalComponent {
     link: ComponentLink<Self>,
     title: String,
     pub show_dialog: bool,
@@ -31,12 +31,12 @@ pub struct Props {
     modal_manager: Rc<ModalManager>,
 }
 
-impl Component for MoadlComponent {
+impl Component for ModalComponent {
     type Message = Msg;
     type Properties = Props;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        MoadlComponent {
+        ModalComponent {
             link,
             title: props.title,
             show_dialog: props.show_dialog,
