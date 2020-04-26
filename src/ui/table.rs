@@ -6,13 +6,13 @@ pub struct Table {
     sort_column: Option<SortColumn>,
 }
 
-pub struct TableData<T: Into<String>, U: Into<String>> {
-    pub headers: Vec<T>,
-    pub data: Vec<Vec<U>>,
+pub struct TableData {
+    pub headers: Vec<String>,
+    pub data: Vec<Vec<serde_json::Value>>,
 }
 
-impl <T: Into<String>, U: Into<String>>TableData<T, U> {
-    pub fn new(headers: Vec<T>, data: Vec<Vec<U>>) -> Self {
+impl TableData {
+    pub fn new(headers: Vec<String>, data: Vec<Vec<serde_json::Value>>) -> Self {
         TableData {
             headers,
             data,
@@ -65,7 +65,7 @@ impl From<bool> for SortOrder {
 #[derive(Clone, PartialEq, Properties)]
 pub struct Props {
     pub headers: Vec<String>,
-    pub rows: Vec<Vec<String>>,
+    pub rows: Vec<Vec<serde_json::Value>>,
     #[prop_or_default]
     pub sort_column: Option<SortOrder>
 }
@@ -150,8 +150,38 @@ impl Table {
         }
     }
 
-    fn render_rows(&self, rows: &Vec<Vec<String>>) -> Html {
-        // TODO: add sort_by -> https://doc.rust-lang.org/std/vec/struct.Vec.html#method.sort_by
+    fn render_rows(&self, rows: &Vec<Vec<serde_json::Value>>) -> Html
+    {
+        let mut rows = rows.to_vec();
+        if let Some(sort_column) = &self.sort_column {
+            log::info!("sorting vec rows");
+            rows.sort_by(|a, b| {
+                let index = sort_column.index;
+                let a: &serde_json::Value = &a[index];
+                let b: &serde_json::Value = &b[index];
+                if let (Some(a), Some(b)) = (a.as_f64(), b.as_f64()) {
+                    if sort_column.sort_order == SortOrder::Ascending {
+                        a.partial_cmp(&b).unwrap()
+                    } else {
+                        b.partial_cmp(&a).unwrap()
+                    }    
+                } else if let (Some(a), Some(b)) = (a.as_i64(), b.as_i64()) {
+                    if sort_column.sort_order == SortOrder::Ascending {
+                        a.partial_cmp(&b).unwrap()
+                    } else {
+                        b.partial_cmp(&a).unwrap()
+                    }
+                } else if let (Some(a), Some(b)) = (a.as_str(), b.as_str()) {
+                    if sort_column.sort_order == SortOrder::Ascending {
+                        a.partial_cmp(b).unwrap()
+                    } else {
+                        b.partial_cmp(a).unwrap()
+                    }
+                } else {
+                    std::cmp::Ordering::Greater
+                }
+            })
+        } 
         rows.iter()
             .map(|row| {
                 html! {
@@ -169,17 +199,26 @@ impl Table {
         ).collect::<Html>()
     }
 
-    fn render_column(&self, index: usize, column: &String) -> Html {
+    fn render_column(&self, index: usize, column: &serde_json::Value) -> Html {
         let callback = self.link.callback(move |_e| Msg::SortClicked(index));
         html! {
             // Render Column
             <td onclick=callback>
-            { column }
+            { 
+                // hack to remove "" for string values
+                if let Some(column) = column.as_str() {
+                    format!("{}", column)
+                } else if let Some(column) = column.as_f64() {
+                    format!("{:.2}", column)
+                } else {
+                    format!("{}", column) 
+                }
+            }
             </td>
         }
     }
 
-    fn table_from_vecs(&self, header: &Vec<String>, data: &Vec<Vec<String>>) -> Html {
+    fn table_from_vecs(&self, header: &Vec<String>, data: &Vec<Vec<serde_json::Value>>) -> Html {
         html! {
             <table id="coivd" class="table table-sm table-responsive-sm">
                 { self.render_header(header) }
@@ -188,51 +227,6 @@ impl Table {
                 </tbody>
             </table>
         }
-    }
-}
-
-// TODO: Remvoe when not used
-#[deprecated(
-    since = "0.1.0",
-    note = "Please use Table component"
-)]
-pub fn table_from_vecs(header: &Vec<String>, data: &Vec<Vec<String>>) -> Html {
-    html! {
-        <table id="coivd" class="table table-sm table-responsive-sm">
-            <thead>
-                // Process headers
-                <tr>
-                { 
-                    header.iter()
-                        .map(|header_value| html! {
-                            <th>{ header_value }</th>
-                        }).collect::<Html>()
-                }
-                </tr>
-            </thead>
-            <tbody>
-                { data.iter()
-                    .map(|row| {
-                        html! {
-                            <tr> // 
-                            { 
-                                row.iter()
-                                    .enumerate()
-                                    .map(|(index, column)| {
-                                        html! {
-                                            // Render Column
-                                            <td>
-                                            { column }
-                                            </td>
-                                        }
-                                    }).collect::<Html>()
-                            }
-                            </tr>
-                        }
-                    }).collect::<Html>()
-                }
-            </tbody>
-        </table>
     }
 }
 
