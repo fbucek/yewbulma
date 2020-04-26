@@ -1,8 +1,4 @@
 use yew::prelude::*;
-use yew::services::console::ConsoleService;
-
-use std::iter::Iterator;
-
 
 pub struct Table {
     link: ComponentLink<Self>,
@@ -149,13 +145,7 @@ impl Table {
                         row.iter()
                             .enumerate()
                             .map(|(index, column)| {
-                                let callback = self.link.callback(move |e| Msg::SortClicked(index));
-                                html! {
-                                    // Render Column
-                                    <td onclick=callback>
-                                    { column }
-                                    </td>
-                                }
+                                self.render_column(index, column)
                             }).collect::<Html>()
                     }
                     </tr>
@@ -165,9 +155,10 @@ impl Table {
     }
 
     fn render_column(&self, index: usize, column: &String) -> Html {
+        let callback = self.link.callback(move |e| Msg::SortClicked(index));
         html! {
             // Render Column
-            <td onclick=self.link.callback(move |_| Msg::SortClicked(index))>
+            <td onclick=callback>
             { column }
             </td>
         }
@@ -185,7 +176,12 @@ impl Table {
     }
 }
 
-fn table_from_vecs(header: &Vec<String>, data: &Vec<Vec<String>>) -> Html {
+// TODO: Remvoe when not used
+#[deprecated(
+    since = "0.1.0",
+    note = "Please use Table component"
+)]
+pub fn table_from_vecs(header: &Vec<String>, data: &Vec<Vec<String>>) -> Html {
     html! {
         <table id="coivd" class="table table-sm table-responsive-sm">
             <thead>
