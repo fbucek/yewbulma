@@ -17,8 +17,8 @@ serde = { version = "1.0", features = ["rc"] }
 serde_derive = "1"
 
 # WebAssembly
-yew = { version = "0.14", features = ["web_sys"] }
-yew-router = { version = "0.11", features = ["web_sys"]}
+yew = "0.15"
+yew-router = "0.12"
 wee_alloc = "0.4"
 
 wasm-bindgen = { version = "0.2", features = ["serde-serialize" ] }
