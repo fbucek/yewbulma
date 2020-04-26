@@ -155,7 +155,7 @@ impl Table {
     }
 
     fn render_column(&self, index: usize, column: &String) -> Html {
-        let callback = self.link.callback(move |e| Msg::SortClicked(index));
+        let callback = self.link.callback(move |_e| Msg::SortClicked(index));
         html! {
             // Render Column
             <td onclick=callback>

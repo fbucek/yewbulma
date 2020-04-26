@@ -5,20 +5,20 @@ use yew::{html, Component, ComponentLink, Html, ShouldRender};
 use yewbulma::ui::table::Table;
 
 pub struct Model {
-    link: ComponentLink<Self>,
+    //link: ComponentLink<Self>,
 }
 
 impl Component for Model {
     type Message = ();
     type Properties = ();
 
-    fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
+    fn create(_: Self::Properties, _link: ComponentLink<Self>) -> Self {
         Model {
-            link,
+            // link,
         }
     }
 
-    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
         true
     }
 

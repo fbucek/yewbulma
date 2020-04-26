@@ -1,6 +1,6 @@
 #![recursion_limit = "1024"]
 
-#[macro_use]
+// #[macro_use]
 extern crate serde_derive;
 
 pub mod ui;
