@@ -6,6 +6,21 @@ pub struct Table {
     sort_column: Option<SortColumn>,
 }
 
+pub struct TableData<T: Into<String>, U: Into<String>> {
+    pub headers: Vec<T>,
+    pub data: Vec<Vec<U>>,
+}
+
+impl <T: Into<String>, U: Into<String>>TableData<T, U> {
+    pub fn new(headers: Vec<T>, data: Vec<Vec<U>>) -> Self {
+        TableData {
+            headers,
+            data,
+        }
+    }
+}
+
+
 pub enum Msg {
     SortClicked(usize),
 }
@@ -234,5 +249,27 @@ mod tests {
     #[test]
     fn test_table() {
         
+    }
+
+    #[wasm_bindgen_test]
+    fn test_table_data() {
+        let headers = vec![
+            "City".to_string(), 
+            "Population".to_string(),
+            "Rating".to_string(),
+        ];
+        let rows: Vec<Vec<String>> = vec![
+            vec!["Prague".to_string(), "14000000".to_string(), "104".to_string()],
+            vec!["London".to_string(), "86300000".to_string(), "106".to_string()],
+            vec!["Madrid".to_string(), "66420000".to_string(), "106".to_string()],
+        ];
+
+        let table_data = TableData::new(headers, rows);
+        assert_eq!(table_data.headers.first().unwrap(), &"City".to_string());
+
+        // Data check
+        let prague = table_data.data.first().unwrap()
+            .first().unwrap();
+        assert_eq!(prague, &"Prague".to_string());
     }
 }
