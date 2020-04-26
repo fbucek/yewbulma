@@ -3,7 +3,7 @@
 #[macro_use]
 extern crate serde_derive;
 
-pub mod bulma;
+pub mod ui;
 pub mod managers;
 pub mod menu;
 pub mod core;
