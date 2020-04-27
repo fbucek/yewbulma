@@ -5,7 +5,8 @@ authors = ["Filip Bucek <fbucek@invloop.cz>"]
 edition = "2018"
 
 [dependencies]
-yew = "0.14"
+# yew = "0.14"
+yew = { git = "https://github.com/yewstack/yew.git" }
 js-sys = "0.3"
 log = "0.4"
 console_log = "0.2"

@@ -18,8 +18,10 @@ serde_json = "1"
 serde_derive = "1"
 
 # WebAssembly
-yew = { version = "0.14", features = ["web_sys"] } # 0.15 not possible to use due 
-yew-router = { version = "0.11", features = ["web_sys"] } # 0.12 problem with yew-router https://github.com/yewstack/yew/pull/1136
+yew = { git = "https://github.com/yewstack/yew.git" }
+# yew = { version = "0.14", features = ["web_sys"] } # 0.15 not possible to use due 
+yew-router = { git = "https://github.com/yewstack/yew.git" }
+# yew-router = { version = "0.11", features = ["web_sys"] } # 0.12 problem with yew-router https://github.com/yewstack/yew/pull/1136
 wee_alloc = "0.4"
 
 wasm-bindgen = { version = "0.2", features = ["serde-serialize" ] }
