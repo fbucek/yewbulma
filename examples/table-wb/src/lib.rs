@@ -1,5 +1,5 @@
 #![recursion_limit = "256"]
-use wasm_bindgen::prelude::*; 
+
 use yew::{html, Component, ComponentLink, Html, ShouldRender};
 
 use yewbulma::ui::table::Table;
@@ -44,12 +44,4 @@ impl Component for Model {
             </div>
         }
     }
-}
-
-#[wasm_bindgen(start)]
-pub fn run_app() {
-    if console_log::init_with_level(log::Level::Trace).is_err() {
-        log::error!("Not possible to init logger / message irrelevant -> log not working");
-    }
-    yew::start_app::<Model>();
 }

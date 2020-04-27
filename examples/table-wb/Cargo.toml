@@ -11,11 +11,9 @@ js-sys = "0.3"
 log = "0.4"
 console_log = "0.2"
 serde_json = "1.0"
-wasm-bindgen = "0.2"
-
 
 yewbulma = { path = "../.." }
 
-# wasm-pack requirements
-[lib]
-crate-type = ["cdylib", "rlib"]
+# Needed for wasm-pack
+# [lib]
+# crate-type = ["cdylib", "rlib"]
