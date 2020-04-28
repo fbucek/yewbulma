@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# Helper output functions
+# src: https://gist.github.com/fbucek/f986da3cc3a9bbbd1573bdcb23fed2e1
 set -e # error -> trap -> exit
 function info() { echo -e "[\033[0;34m $@ \033[0m]"; } # blue: [ info message ]
 trap 'LASTRES=$?; LAST=$BASH_COMMAND; if [[ LASTRES -ne 0 ]]; then fail "Command: \"$LAST\" exited with exit code: $LASTRES"; elif [ "$FAIL" == "true"  ]; then fail finished with error; else echo -e "[\033[0;32m Finished \033[0m]";fi' EXIT
 SRCDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" # this source dir
-
 cd $SRCDIR # ensure current dir is this dir
 
 EXAMPLE=$1
@@ -33,5 +32,6 @@ if [[ $EXAMPLE == *-wb ]]; then
     wasm-opt $SRCDIR/static/wasm_bg_orig.wasm -Os -o $SRCDIR/static/wasm_bg.wasm
 else 
     info "Using wasm-pack"
+    # Release run will be with wasm-opt optimalization
     wasm-pack build --release --target web --out-name wasm --out-dir ../static
 fi

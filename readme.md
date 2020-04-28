@@ -9,7 +9,7 @@ Components for Yew in [Bulma CSS](https://bulma.io)
 
 Using examples and watch
 
-1. `cargo watch -s "examples/run.sh table"`
+1. `cargo watch -s "examples/run.sh table"` or `cargo watch -s "examples/run.sh table-wb` ( wb -> wasm-bindgen )
     * Run server e.g. using serving `example/static` folder
     * using `python3 -m http.server 8000 --directory examples/static`
     * or VSCode extension: `Live Server`
