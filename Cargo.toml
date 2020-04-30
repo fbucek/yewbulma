@@ -12,14 +12,16 @@ crate-type = ["cdylib", "rlib"]
 log = "0.4"
 console_log = "0.2"
 anyhow = "1"
-# TODO: keep in and check if needed 
+
 serde = { version = "1.0", features = ["rc"] }
+serde_json = "1"
 serde_derive = "1"
-yew = { version = "0.14", features = ["web_sys"] }
-yew-router = { version = "0.11", features = ["web_sys"]}
+
+# Wasm
+yew = "0.15"
+yew-router = "0.12"
 wee_alloc = "0.4"
 
-# WebAssembly
 wasm-bindgen = { version = "0.2", features = ["serde-serialize" ] }
 wasm-bindgen-futures = "0.4"
 js-sys = "0.3"

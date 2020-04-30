@@ -121,7 +121,7 @@ impl Component for PopupManagerUI {
         }
     }
 
-    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
         true
     }
 

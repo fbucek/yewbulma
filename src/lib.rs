@@ -1,9 +1,9 @@
 #![recursion_limit = "1024"]
 
-#[macro_use]
-extern crate serde_derive;
+// #[macro_use]
+// extern crate serde_derive;
 
-pub mod bulma;
+pub mod ui;
 pub mod managers;
 pub mod menu;
 pub mod core;

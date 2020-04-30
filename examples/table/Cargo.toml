@@ -1,0 +1,20 @@
+[package]
+name = "exampletable"
+version = "0.1.0"
+authors = ["Filip Bucek <fbucek@invloop.cz>"]
+edition = "2018"
+
+[dependencies]
+yew = "0.15"
+js-sys = "0.3"
+log = "0.4"
+console_log = "0.2"
+serde_json = "1.0"
+wasm-bindgen = "0.2"
+
+
+yewbulma = { path = "../.." }
+
+# wasm-pack requirements
+[lib]
+crate-type = ["cdylib", "rlib"]

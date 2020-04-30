@@ -116,11 +116,12 @@ impl Component for MenuBar {
         }
     }
 
-    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+    fn change(&mut self, _props: Self::Properties) -> ShouldRender {
         true
     }
 
-    fn mounted(&mut self) -> ShouldRender {
+    fn rendered(&mut self, _first_render: bool)  {
+    // fn mounted(&mut self) -> ShouldRender {
         // Handle colapse 
         // -> when url match .link -> item.expanded = false/
         let path = yew::utils::window().location().pathname().unwrap_or_else(|_| "".to_string());
@@ -141,7 +142,7 @@ impl Component for MenuBar {
         }
 
         log::trace!("not mounted is called");
-        true
+        // false
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
