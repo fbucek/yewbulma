@@ -66,7 +66,7 @@ impl From<bool> for SortOrder {
 pub struct Props {
     pub headers: Vec<String>,
     pub rows: Vec<Vec<serde_json::Value>>,
-    #[prop_or_default]
+    // #[prop_or_default]
     pub sort_column: Option<SortOrder>
 }
 
@@ -109,8 +109,9 @@ impl Component for Table {
         self.table_from_vecs(&self.props.headers, &self.props.rows)
     }
 }
+
 impl Table {
-    fn render_header(&self, headers: &Vec<String>) -> Html {
+    fn render_header(&self, headers: &[String]) -> Html {
         html! {
             <thead>
             <tr>
@@ -122,7 +123,7 @@ impl Table {
                             // <i class="fa fa-chevron-up" aria-hidden="true"></i>
                             <th 
                                 onclick=self.link.callback(move |_| Msg::SortClicked(index))
-                                ondoubleclick=self.link.callback(move |_| Msg::SortClicked(index))
+                                ondblclick=self.link.callback(move |_| Msg::SortClicked(index))
                             >
                             { 
                                     if let Some(column_sort) = &self.sort_column {

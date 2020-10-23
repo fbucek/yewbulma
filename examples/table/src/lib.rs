@@ -40,7 +40,7 @@ impl Component for Model {
 
         html! {
             <div>
-                <Table headers=headers rows=rows />
+                // <Table headers=headers rows=rows />
             </div>
         }
     }

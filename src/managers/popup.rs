@@ -63,7 +63,6 @@ pub struct PopupManagerUI {
     // Data
     messages: Vec<Rc<PopupMessage>>,
     // Timer
-    timer: TimeoutService,
     timer_tasks: Vec<Box<dyn Task>>,
     // Communication
     link: ComponentLink<Self>,
@@ -108,13 +107,11 @@ impl Component for PopupManagerUI {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        let timer = TimeoutService::new();
         let callback = link.callback(|message| message);
         let _context = popup_bus::EventBus::bridge(callback);
 
         PopupManagerUI {
             link,
-            timer,
             messages: Vec::<Rc<PopupMessage>>::new(),
             timer_tasks: Vec::new(),
             _context,
@@ -130,9 +127,7 @@ impl Component for PopupManagerUI {
             Msg::NewMsg(message) => {
                 self.add_toast(message);
                 log::info!("New Popup messages XXXX");
-                let task = Box::new(self
-                    .timer
-                    .spawn(Duration::from_secs(3), self.link.callback(|_| Msg::TimerDone)));
+                let task = Box::new(yew::services::TimeoutService::spawn(Duration::from_secs(3), self.link.callback(|_| Msg::TimerDone)));
                 
                 self.timer_tasks.push(task);
             }
