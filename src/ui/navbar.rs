@@ -1,8 +1,8 @@
 use yew::prelude::*;
 use yew::services::console::ConsoleService;
 
-use crate::menu::MenuItem;
 use super::menubar::MenuBar;
+use crate::menu::MenuItem;
 
 pub struct Navbar {
     link: ComponentLink<Self>,
@@ -66,11 +66,7 @@ impl Component for Navbar {
     }
 
     fn view(&self) -> Html {
-        let class = if self.show_burger {
-            "is-active"
-        } else {
-            ""
-        };
+        let class = if self.show_burger { "is-active" } else { "" };
 
         html! {
             <nav class="navbar is-hidden-tablet is-unselectable">

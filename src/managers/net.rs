@@ -1,6 +1,6 @@
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
-use yew::{Callback, format::{Nothing}};
 use anyhow::anyhow;
+use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::{format::Nothing, Callback};
 
 pub struct RequestManager {
     tasks: Vec<FetchTask>,
@@ -8,12 +8,14 @@ pub struct RequestManager {
 
 impl RequestManager {
     pub fn new() -> Self {
-        Self {
-            tasks: Vec::new(),
-        }
+        Self { tasks: Vec::new() }
     }
 
-    pub fn get_url(&mut self, url: String, callback: Callback<anyhow::Result<String>>) -> anyhow::Result<()>{
+    pub fn get_url(
+        &mut self,
+        url: String,
+        callback: Callback<anyhow::Result<String>>,
+    ) -> anyhow::Result<()> {
         let request_url = url.clone();
         let handler = move |response: Response<Result<String, anyhow::Error>>| {
             let (meta, data) = response.into_parts();
@@ -21,19 +23,27 @@ impl RequestManager {
                 callback.emit(data)
             } else {
                 // format_err! is a macro in crate `failure`
-                let err = Err(anyhow!("{}: error getting data from url: {} data: {:?}", meta.status, &url, &data));
+                let err = Err(anyhow!(
+                    "{}: error getting data from url: {} data: {:?}",
+                    meta.status,
+                    &url,
+                    &data
+                ));
                 callback.emit(err);
             }
         };
         let request = Request::get(request_url.as_str()).body(Nothing).unwrap();
         let task = yew::services::FetchService::fetch(request, handler.into()).unwrap();
         self.tasks.push(task);
-        
+
         Ok(())
     }
 
-
-    pub fn get_bin(&mut self, url: String, callback: Callback<Result<Vec<u8>, anyhow::Error>>) -> anyhow::Result<()>{
+    pub fn get_bin(
+        &mut self,
+        url: String,
+        callback: Callback<Result<Vec<u8>, anyhow::Error>>,
+    ) -> anyhow::Result<()> {
         let request_url = url.clone();
         let handler = move |response: Response<Result<Vec<u8>, anyhow::Error>>| {
             let (meta, data) = response.into_parts();
@@ -41,7 +51,12 @@ impl RequestManager {
                 callback.emit(data)
             } else {
                 // format_err! is a macro in crate `failure`
-                let err = Err(anyhow!("{}: error getting data from url: {} data: {:?}", meta.status, &url, &data));
+                let err = Err(anyhow!(
+                    "{}: error getting data from url: {} data: {:?}",
+                    meta.status,
+                    &url,
+                    &data
+                ));
                 callback.emit(err);
             }
         };
@@ -53,8 +68,12 @@ impl RequestManager {
         Ok(())
     }
 
-
-    pub fn post(&mut self, url: String, body: String, callback: Callback<anyhow::Result<String>>) -> anyhow::Result<()> {
+    pub fn post(
+        &mut self,
+        url: String,
+        body: String,
+        callback: Callback<anyhow::Result<String>>,
+    ) -> anyhow::Result<()> {
         let request_url = url.clone();
         // Handler closure - will solve post request
         let handler = move |response: Response<Result<String, anyhow::Error>>| {
@@ -65,7 +84,12 @@ impl RequestManager {
             } else {
                 log::error!("status is not success()");
                 // format_err! is a macro in crate `failure`
-                let err = Err(anyhow!("{}: error getting data from url: {} data: {:?}", meta.status, &url, &data));
+                let err = Err(anyhow!(
+                    "{}: error getting data from url: {} data: {:?}",
+                    meta.status,
+                    &url,
+                    &data
+                ));
                 callback.emit(err);
             }
         };
@@ -80,7 +104,7 @@ impl RequestManager {
                     log::trace!("trying to post message");
                     self.tasks.push(task);
                 }
-            },
+            }
             Err(_) => log::error!("not possible to create post request"),
         }
 
@@ -103,5 +127,4 @@ impl RequestManager {
     //     let request = Request::post(request_url.as_str()).body(body).unwrap();
     //     self.fetch_service.fetch(request, handler.into()).unwrap()
     // }
-
 }

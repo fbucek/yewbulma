@@ -1,13 +1,11 @@
-use std::future::Future;
 use std::fmt::{Error, Formatter};
+use std::future::Future;
 
 use wasm_bindgen::prelude::*;
-use wasm_bindgen_futures::JsFuture;
 use wasm_bindgen::JsCast;
+use wasm_bindgen_futures::JsFuture;
 use web_sys::{Request, RequestInit, RequestMode, Response, Window};
 use yew::{Component, ComponentLink};
-
-
 
 #[cfg(all(target_arch = "wasm32", not(target_os = "wasi"), not(cargo_web)))]
 /// This method processes a Future that returns a message and sends it back to the component's
@@ -58,10 +56,7 @@ pub async fn fetch_url(url: String) -> Result<String, FetchError> {
     opts.method("GET");
     opts.mode(RequestMode::Cors);
 
-    let request = Request::new_with_str_and_init(
-        url.as_str(),
-        &opts,
-    )?;
+    let request = Request::new_with_str_and_init(url.as_str(), &opts)?;
 
     // Using native browser to get data
     let window: Window = web_sys::window().unwrap();
@@ -74,7 +69,7 @@ pub async fn fetch_url(url: String) -> Result<String, FetchError> {
     Ok(text.as_string().unwrap())
 }
 
-pub async fn fetch_text<T: Into<String>>(url: T) ->String {
+pub async fn fetch_text<T: Into<String>>(url: T) -> String {
     match fetch_url(url.into()).await {
         Ok(data) => data,
         Err(_) => "".to_string(),

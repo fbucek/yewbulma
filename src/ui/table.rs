@@ -13,18 +13,13 @@ pub struct TableData {
 
 impl TableData {
     pub fn new(headers: Vec<String>, data: Vec<Vec<serde_json::Value>>) -> Self {
-        TableData {
-            headers,
-            data,
-        }
+        TableData { headers, data }
     }
 }
-
 
 pub enum Msg {
     SortClicked(usize),
 }
-
 
 pub struct SortColumn {
     pub index: usize,
@@ -67,7 +62,7 @@ pub struct Props {
     pub headers: Vec<String>,
     pub rows: Vec<Vec<serde_json::Value>>,
     #[prop_or_default]
-    pub sort_column: Option<SortOrder>
+    pub sort_column: Option<SortOrder>,
 }
 
 impl Component for Table {
@@ -78,7 +73,7 @@ impl Component for Table {
         Table {
             link,
             props,
-            sort_column: None
+            sort_column: None,
         }
     }
 
@@ -116,15 +111,15 @@ impl Table {
             <tr>
             { headers.iter()
                 .enumerate()
-                .map(|(index, header_value)| 
+                .map(|(index, header_value)|
                     html! {
                         <>
                             // <i class="fa fa-chevron-up" aria-hidden="true"></i>
-                            <th 
+                            <th
                                 onclick=self.link.callback(move |_| Msg::SortClicked(index))
                                 ondblclick=self.link.callback(move |_| Msg::SortClicked(index))
                             >
-                            { 
+                            {
                                     if let Some(column_sort) = &self.sort_column {
                                         if column_sort.index == index {
                                             if column_sort.sort_order == SortOrder::Ascending {
@@ -138,7 +133,7 @@ impl Table {
                                     } else {
                                         html! {}
                                     }
-                            }  
+                            }
                             { header_value }
                             </th>
                         </>
@@ -150,8 +145,7 @@ impl Table {
         }
     }
 
-    fn render_rows(&self, rows: &Vec<Vec<serde_json::Value>>) -> Html
-    {
+    fn render_rows(&self, rows: &Vec<Vec<serde_json::Value>>) -> Html {
         let mut rows = rows.to_vec();
         if let Some(sort_column) = &self.sort_column {
             log::info!("sorting vec rows");
@@ -164,7 +158,7 @@ impl Table {
                         a.partial_cmp(&b).unwrap()
                     } else {
                         b.partial_cmp(&a).unwrap()
-                    }    
+                    }
                 } else if let (Some(a), Some(b)) = (a.as_i64(), b.as_i64()) {
                     if sort_column.sort_order == SortOrder::Ascending {
                         a.partial_cmp(&b).unwrap()
@@ -181,22 +175,24 @@ impl Table {
                     std::cmp::Ordering::Greater
                 }
             })
-        } 
+        }
         rows.iter()
-            .map(|row| {
-                html! {
-                    <tr> // 
-                    { 
-                        row.iter()
-                            .enumerate()
-                            .map(|(index, column)| {
-                                self.render_column(index, column)
-                            }).collect::<Html>()
-                    }
-                    </tr>
-                } // html!
-            } // map
-        ).collect::<Html>()
+            .map(
+                |row| {
+                    html! {
+                        <tr> //
+                        {
+                            row.iter()
+                                .enumerate()
+                                .map(|(index, column)| {
+                                    self.render_column(index, column)
+                                }).collect::<Html>()
+                        }
+                        </tr>
+                    } // html!
+                }, // map
+            )
+            .collect::<Html>()
     }
 
     fn render_column(&self, index: usize, column: &serde_json::Value) -> Html {
@@ -204,14 +200,14 @@ impl Table {
         html! {
             // Render Column
             <td onclick=callback>
-            { 
+            {
                 // hack to remove "" for string values
                 if let Some(column) = column.as_str() {
                     format!("{}", column)
                 } else if let Some(column) = column.as_f64() {
                     format!("{:.2}", column)
                 } else {
-                    format!("{}", column) 
+                    format!("{}", column)
                 }
             }
             </td>
@@ -231,9 +227,9 @@ impl Table {
 }
 
 /// How to test
-/// 
+///
 /// `wasm-pack test --chrome --headless`
-/// 
+///
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -241,14 +237,12 @@ mod tests {
     wasm_bindgen_test::wasm_bindgen_test_configure!(run_in_browser);
 
     #[test]
-    fn test_table() {
-        
-    }
+    fn test_table() {}
 
     #[wasm_bindgen_test]
     fn test_table_data() {
         let headers = vec![
-            "City".to_string(), 
+            "City".to_string(),
             "Population".to_string(),
             "Rating".to_string(),
         ];
@@ -262,8 +256,7 @@ mod tests {
         assert_eq!(table_data.headers.first().unwrap(), &"City".to_string());
 
         // Data check
-        let prague = table_data.data.first().unwrap()
-            .first().unwrap();
+        let prague = table_data.data.first().unwrap().first().unwrap();
         assert_eq!(prague, &"Prague".to_string());
     }
 }

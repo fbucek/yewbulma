@@ -73,7 +73,7 @@ impl Component for ModalDialog {
                     { &self.body }
                     </section>
                     <footer class="modal-card-foot">
-        
+
                     <button class="button is-success" onclick=confirm>{ &self.ok_text }</button>
                     <button class="button" onclick=&cancel> { "Cancel" }</button>
                     </footer>

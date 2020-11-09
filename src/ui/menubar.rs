@@ -13,7 +13,7 @@ pub enum Msg {
 }
 
 #[derive(Clone, PartialEq, Properties)]
-pub struct Props {  
+pub struct Props {
     #[prop_or_default]
     pub menu_list: Vec<MenuItem>,
     // #[prop_or_default]
@@ -45,7 +45,7 @@ impl MenuBar {
                     <span>{ item.name.clone() }</span>
                     <span class=collapsible_class /> //"submenu-icon ml-auto" :class="item.expanded ? 'menu-closed' : 'menu-opened'"></span>
                 </a>
-                { 
+                {
                     if item.expanded {
                         html!{ <ul class="submenu"> {
                             item.children.iter().map(|subitem|  {
@@ -69,7 +69,7 @@ impl MenuBar {
 
         let item_html = if is_subitem {
             html! {
-                <> 
+                <>
                     <span>{ item.name.clone() }</span>
                 </>
             }
@@ -82,7 +82,7 @@ impl MenuBar {
             }
         };
 
-        if url.starts_with("http") { 
+        if url.starts_with("http") {
             html! {
                 <a href=url class="">
                 { item_html }
@@ -120,11 +120,14 @@ impl Component for MenuBar {
         true
     }
 
-    fn rendered(&mut self, _first_render: bool)  {
-    // fn mounted(&mut self) -> ShouldRender {
-        // Handle colapse 
+    fn rendered(&mut self, _first_render: bool) {
+        // fn mounted(&mut self) -> ShouldRender {
+        // Handle colapse
         // -> when url match .link -> item.expanded = false/
-        let path = yew::utils::window().location().pathname().unwrap_or_else(|_| "".to_string());
+        let path = yew::utils::window()
+            .location()
+            .pathname()
+            .unwrap_or_else(|_| "".to_string());
         log::trace!("checking expanding: path is  {}", &path);
 
         // If any children has matching path -> expand
@@ -137,7 +140,7 @@ impl Component for MenuBar {
                     if path == *link {
                         item.expanded = true;
                     }
-                }            
+                }
             }
         }
 
@@ -150,7 +153,7 @@ impl Component for MenuBar {
             Msg::ItemClicked(menuitem) => {
                 log::trace!("Now handling: {}", menuitem.name);
                 // expand / collapse when has children
-                if ! menuitem.children.is_empty() {
+                if !menuitem.children.is_empty() {
                     for item in &mut self.menu_list.iter_mut() {
                         if menuitem == *item {
                             // invert bool
@@ -179,9 +182,9 @@ impl Component for MenuBar {
     fn view(&self) -> Html {
         html! {
             <ul class="is-unselectable">
-                // { for item in &self.menu_list { 
-                { self.menu_list.iter().map(|item| { 
-                    html! {  
+                // { for item in &self.menu_list {
+                { self.menu_list.iter().map(|item| {
+                    html! {
                         <li class="menu-list">
                             {
                                 if item.separator {
@@ -200,6 +203,3 @@ impl Component for MenuBar {
         }
     }
 }
-
-
-

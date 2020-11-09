@@ -1,12 +1,12 @@
 use yew::prelude::*;
-use yew::services::{TimeoutService, Task };
+use yew::services::{Task, TimeoutService};
 
-use yew::agent::Dispatcher;
-use yew::agent::Dispatched; // needed for ::dispatcher()
+use yew::agent::Dispatched;
+use yew::agent::Dispatcher; // needed for ::dispatcher()
 
 use serde::{Deserialize, Serialize};
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 use std::time::Duration;
 
@@ -21,17 +21,21 @@ pub struct PopupMessage {
 
 impl PopupMessage {
     pub fn new_rc(header: String, body: String, class_type: String) -> Rc<Self> {
-        Rc::new(PopupMessage { header, body, class_type })
+        Rc::new(PopupMessage {
+            header,
+            body,
+            class_type,
+        })
     }
 }
 
 pub struct PopupManager {
-    pub event_bus: Rc<RefCell<Dispatcher<popup_bus::EventBus>>>, //   
+    pub event_bus: Rc<RefCell<Dispatcher<popup_bus::EventBus>>>, //
 }
 
 impl PopupManager {
     pub fn new() -> Self {
-        PopupManager { 
+        PopupManager {
             event_bus: Rc::new(RefCell::new(popup_bus::EventBus::dispatcher())),
         }
     }
@@ -40,23 +44,22 @@ impl PopupManager {
         let popup_message = PopupMessage::new_rc(
             header.into(),
             body.unwrap_or("".to_string()),
-            "has-background-info".into()
+            "has-background-info".into(),
         );
         let mut bus = self.event_bus.borrow_mut();
         bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
     }
-    
+
     pub fn error<T: Into<String>>(&self, header: T, body: Option<String>) {
         let popup_message = PopupMessage::new_rc(
             header.into(),
             body.unwrap_or("".to_string()),
-            "has-background-danger".into()
+            "has-background-danger".into(),
         );
         let mut bus = self.event_bus.borrow_mut();
         bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
     }
 }
-
 
 /// Popupmanager is connected using Agent link
 pub struct PopupManagerUI {
@@ -82,7 +85,7 @@ impl PopupManagerUI {
             html! {
                 <div class=vec!["c-toasts__item", toast.class_type.as_str()]>
                     <span class="c-toasts__item-header">{ toast.header.clone() }</span>
-                    { 
+                    {
                         if ! toast.body.is_empty() {
                             html! { <span class="c-toasts__item-body">{ toast.body.clone() }</span> }
                         } else {
@@ -126,11 +129,10 @@ impl Component for PopupManagerUI {
             Msg::NewMsg(message) => {
                 self.add_toast(message);
                 log::info!("New Popup messages XXXX");
-                let task = Box::new(
-                    yew::services::TimeoutService::spawn(
-                        Duration::from_secs(3), self.link.callback(|_| Msg::TimerDone)
-                    )
-                );
+                let task = Box::new(yew::services::TimeoutService::spawn(
+                    Duration::from_secs(3),
+                    self.link.callback(|_| Msg::TimerDone),
+                ));
                 self.timer_tasks.push(task);
             }
             Msg::TimerDone => {
