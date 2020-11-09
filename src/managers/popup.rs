@@ -1,5 +1,5 @@
 use yew::prelude::*;
-use yew::services::{Task, TimeoutService};
+use yew::services::Task;
 
 use yew::agent::Dispatched;
 use yew::agent::Dispatcher; // needed for ::dispatcher()

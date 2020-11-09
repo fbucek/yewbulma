@@ -1,5 +1,4 @@
 use yew::prelude::*;
-use yew::services::console::ConsoleService;
 
 use super::menubar::MenuBar;
 use crate::menu::MenuItem;

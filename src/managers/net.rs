@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use yew::services::fetch::{FetchService, FetchTask, Request, Response};
+use yew::services::fetch::{FetchTask, Request, Response};
 use yew::{format::Nothing, Callback};
 
 pub struct RequestManager {

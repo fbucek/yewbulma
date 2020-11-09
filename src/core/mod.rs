@@ -1,11 +1,9 @@
 use std::fmt::{Error, Formatter};
-use std::future::Future;
 
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use wasm_bindgen_futures::JsFuture;
 use web_sys::{Request, RequestInit, RequestMode, Response, Window};
-use yew::{Component, ComponentLink};
 
 #[cfg(all(target_arch = "wasm32", not(target_os = "wasi"), not(cargo_web)))]
 /// This method processes a Future that returns a message and sends it back to the component's
