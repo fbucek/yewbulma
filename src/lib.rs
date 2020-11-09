@@ -3,6 +3,7 @@
 // #[macro_use]
 // extern crate serde_derive;
 
+#[cfg(feature = "fetch")]
 pub mod core;
 pub mod managers;
 pub mod menu;
