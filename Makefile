@@ -12,7 +12,8 @@ doc:
 
 clean: 
 	cargo clean --doc
-
+build: 
+	wasm-pack build --target web --out-name wasm --out-dir wasm/
 test:
 	wasm-pack test --chrome --headless;
 
