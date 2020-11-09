@@ -3,14 +3,12 @@ use yew::{Callback, format::{Nothing}};
 use anyhow::anyhow;
 
 pub struct RequestManager {
-    fetch_service: FetchService,
     tasks: Vec<FetchTask>,
 }
 
 impl RequestManager {
     pub fn new() -> Self {
         Self {
-            fetch_service: FetchService::new(),
             tasks: Vec::new(),
         }
     }
@@ -28,7 +26,7 @@ impl RequestManager {
             }
         };
         let request = Request::get(request_url.as_str()).body(Nothing).unwrap();
-        let task = self.fetch_service.fetch(request, handler.into()).unwrap();
+        let task = yew::services::FetchService::fetch(request, handler.into()).unwrap();
         self.tasks.push(task);
         
         Ok(())
@@ -49,7 +47,7 @@ impl RequestManager {
         };
 
         let request = Request::get(request_url.as_str()).body(Nothing).unwrap();
-        let task = self.fetch_service.fetch_binary(request, handler.into()).unwrap();
+        let task = yew::services::FetchService::fetch_binary(request, handler.into()).unwrap();
         self.tasks.push(task);
 
         Ok(())
@@ -78,7 +76,7 @@ impl RequestManager {
             .body(Ok(body));
         match request {
             Ok(request) => {
-                if let Ok(task) = self.fetch_service.fetch(request, handler.into()) {
+                if let Ok(task) = yew::services::FetchService::fetch(request, handler.into()) {
                     log::trace!("trying to post message");
                     self.tasks.push(task);
                 }

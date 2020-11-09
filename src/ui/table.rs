@@ -122,7 +122,7 @@ impl Table {
                             // <i class="fa fa-chevron-up" aria-hidden="true"></i>
                             <th 
                                 onclick=self.link.callback(move |_| Msg::SortClicked(index))
-                                ondoubleclick=self.link.callback(move |_| Msg::SortClicked(index))
+                                ondblclick=self.link.callback(move |_| Msg::SortClicked(index))
                             >
                             { 
                                     if let Some(column_sort) = &self.sort_column {

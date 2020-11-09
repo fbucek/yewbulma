@@ -6,7 +6,6 @@ use super::menubar::MenuBar;
 
 pub struct Navbar {
     link: ComponentLink<Self>,
-    console: ConsoleService,
     inner: String,
     show_burger: bool,
     menu_list: Vec<MenuItem>,
@@ -37,7 +36,6 @@ impl Component for Navbar {
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
         Navbar {
             link,
-            console: ConsoleService::new(),
             menu_list: props.menu_list,
             inner: props.inner,
             show_burger: props.show_burger,
@@ -52,10 +50,10 @@ impl Component for Navbar {
             //     // self.onsignal.emit(());
             // }
             Msg::BurgerClicked => {
-                self.console.log("Msg::BurgerClicked");
+                yew::services::ConsoleService::log("Msg::BurgerClicked");
                 // self.onsignal.emit(());
                 self.show_burger = !self.show_burger;
-                return true;
+                true
             }
         }
     }

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Examples</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.8.0/css/bulma.min.css">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+
+
+    <script type="module" crossorigin> 
+        import init from "./wasm.js"
+        
+        // Checked when disabled ( js / wasm )
+        // @see https://github.com/stevespringett/disable-webassembly
+        // - Chrome: js ok, wasm ok
+        // - Firefox: js ok, wasm ok
+        // - Safari: js ok, wasm not possible to test
+        const wasm_supported = (() => {
+            try {
+                if (typeof WebAssembly === "object"
+                    && typeof WebAssembly.instantiate === "function") {
+                    const module = new WebAssembly.Module(Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00));
+                    if (module instanceof WebAssembly.Module)
+                        return new WebAssembly.Instance(module) instanceof WebAssembly.Instance;
+                }
+            } catch (e) {
+            }
+            return false;
+        })();
+        // Requirement information to user
+        if ( wasm_supported ) {
+            init();
+        } else { 
+            document.body.innerHTML = "Only browser with webasembly is supported. <a href='https://caniuse.com/#feat=wasm'>Supported browsers</h>";
+        }
+        </script>
+</head>
+<body>
+    <noscript>
+        Only browser with javascript is supported.
+    </noscript>
+</body>
+</html>

@@ -21,7 +21,7 @@ pub struct EventBus {
 }
 
 impl Agent for EventBus {
-    type Reach = Context;
+    type Reach = Context<Self>;
     type Message = ();
     type Input = InputMsg;
     type Output = popup::Msg;
