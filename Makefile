@@ -28,4 +28,4 @@ wtable:
 	cd examples/table; trunk serve --release
 
 publish: all
-	cd aprun && cargo publish
+	cargo publish
