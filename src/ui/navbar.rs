@@ -70,7 +70,7 @@ impl Component for Navbar {
         html! {
             <nav class="navbar is-hidden-tablet is-unselectable">
                 <div class="navbar-brand">
-                    { self.inner.clone() }
+                    <div class="navbar-title">{ self.inner.clone() }</div>
                     // hamburger menu
                     <div class=vec!["navbar-burger", "is-hidden-tablet",  "burger", class] onclick=self.link.callback(|_| Msg::BurgerClicked)>
                         <span></span>

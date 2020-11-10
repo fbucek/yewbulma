@@ -28,4 +28,5 @@ wtable:
 	cd examples/table; trunk serve --release
 
 publish: all
+	# not published yet
 	cargo publish
