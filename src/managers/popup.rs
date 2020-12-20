@@ -128,9 +128,9 @@ impl Component for PopupManagerUI {
         match msg {
             Msg::NewMsg(message) => {
                 self.add_toast(message);
-                log::info!("New Popup messages XXXX");
+                // log::info!("New Popup messages XXXX");
                 let task = Box::new(yew::services::TimeoutService::spawn(
-                    Duration::from_secs(3),
+                    Duration::from_secs(10),
                     self.link.callback(|_| Msg::TimerDone),
                 ));
                 self.timer_tasks.push(task);

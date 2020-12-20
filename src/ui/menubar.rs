@@ -1,5 +1,6 @@
 use yew::prelude::*;
 use yew_router::prelude::*;
+use yew::Html;
 
 use crate::menu::MenuItem;
 
@@ -151,14 +152,14 @@ impl Component for MenuBar {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::ItemClicked(menuitem) => {
-                log::trace!("Now handling: {}", menuitem.name);
+                // log::trace!("Now handling: {}", menuitem.name);
                 // expand / collapse when has children
                 if !menuitem.children.is_empty() {
                     for item in &mut self.menu_list.iter_mut() {
                         if menuitem == *item {
                             // invert bool
                             item.expanded = !item.expanded;
-                            log::trace!("found item: {}", menuitem.name);
+                            //log::trace!("found item: {}", menuitem.name);
                             return true;
                         }
                     }
@@ -169,7 +170,7 @@ impl Component for MenuBar {
                     //     callback.emit(crate::Msg::MenuClicked(menuitem));
                     // }
                 }
-                return true;
+                true
             }
         }
     }
