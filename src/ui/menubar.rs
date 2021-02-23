@@ -137,7 +137,7 @@ impl Component for MenuBar {
                 log::trace!("checking expanding: subitem is  {}", &subitem.name);
 
                 if let Some(link) = &subitem.link {
-                    log::trace!("link is  {}", &link);
+                    log::trace!("link is  {}, path is{}", &link, &path);
                     if path == *link {
                         item.expanded = true;
                     }
