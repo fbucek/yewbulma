@@ -48,6 +48,16 @@ impl PopupManager {
         );
         let mut bus = self.event_bus.borrow_mut();
         bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
+    }    
+
+    pub fn warn<T: Into<String>>(&self, header: T, body: Option<String>) {
+        let popup_message = PopupMessage::new_rc(
+            header.into(),
+            body.unwrap_or("".to_string()),
+            "has-background-warning".into(),
+        );
+        let mut bus = self.event_bus.borrow_mut();
+        bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
     }
 
     pub fn error<T: Into<String>>(&self, header: T, body: Option<String>) {
