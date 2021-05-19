@@ -2,15 +2,12 @@ use anyhow::anyhow;
 use yew::services::fetch::{FetchTask, Request, Response};
 use yew::{format::Nothing, Callback};
 
+#[derive(Default)]
 pub struct RequestManager {
     tasks: Vec<FetchTask>,
 }
 
 impl RequestManager {
-    pub fn new() -> Self {
-        Self { tasks: Vec::new() }
-    }
-
     pub fn get_url(
         &mut self,
         url: String,

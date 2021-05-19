@@ -56,10 +56,10 @@ impl Component for TextArea {
 
     fn view(&self) -> Html {
         html! {
-            <textarea class=("textarea", "new-client", "description")
-            placeholder=&self.placeholder
-            value=&self.value
-            oninput=self.link.callback(|e: InputData| Msg::InputChange(e)) />
+            <textarea class="textarea new-client description"
+            placeholder=self.placeholder.clone()
+            value=self.value.clone()
+            oninput=self.link.callback(Msg::InputChange) />
         }
     }
 }

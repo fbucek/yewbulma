@@ -34,9 +34,11 @@ mod tests {
     use super::*;
 
     fn test_item(name: &str, link: Option<&str>, origin: &str, expected: &str) {
-        let mut item = MenuItem::default();
-        item.name = name.to_string();
-        item.link = link.map(|link| link.to_string());
+        let item = MenuItem {
+            name: name.to_string(),
+            link: link.map(|link| link.to_string()),
+            ..Default::default()
+        };
 
         let url = item.url_href(origin.to_string());
         assert_eq!(url, expected);

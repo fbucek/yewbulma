@@ -105,7 +105,7 @@ impl Component for Table {
     }
 }
 impl Table {
-    fn render_header(&self, headers: &Vec<String>) -> Html {
+    fn render_header(&self, headers: &[String]) -> Html {
         html! {
             <thead>
             <tr>
@@ -145,7 +145,7 @@ impl Table {
         }
     }
 
-    fn render_rows(&self, rows: &Vec<Vec<serde_json::Value>>) -> Html {
+    fn render_rows(&self, rows: &[Vec<serde_json::Value>]) -> Html {
         let mut rows = rows.to_vec();
         if let Some(sort_column) = &self.sort_column {
             log::info!("sorting vec rows");
@@ -203,7 +203,7 @@ impl Table {
             {
                 // hack to remove "" for string values
                 if let Some(column) = column.as_str() {
-                    format!("{}", column)
+                    column.to_string()
                 } else if let Some(column) = column.as_f64() {
                     format!("{:.2}", column)
                 } else {
@@ -214,7 +214,7 @@ impl Table {
         }
     }
 
-    fn table_from_vecs(&self, header: &Vec<String>, data: &Vec<Vec<serde_json::Value>>) -> Html {
+    fn table_from_vecs(&self, header: &[String], data: &[Vec<serde_json::Value>]) -> Html {
         html! {
             <table id="coivd" class="table table-sm table-responsive-sm">
                 { self.render_header(header) }
