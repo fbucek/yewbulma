@@ -1,6 +1,6 @@
 use yew::prelude::*;
-use yew_router::prelude::*;
 use yew::Html;
+use yew_router::prelude::*;
 
 use crate::menu::MenuItem;
 
@@ -61,27 +61,29 @@ impl MenuBar {
         }
     }
 
-    fn menuitem(&self, item: MenuItem, is_subitem: bool) -> Html {
+    fn menuitem(&self, item: MenuItem, _is_subitem: bool) -> Html {
         let url = self.url_href(item.clone());
         let mut class = "fa ".to_string();
         if let Some(icon) = &item.icon {
             class.push_str(&icon.to_string());
         }
 
-        let item_html = if is_subitem {
-            html! {
-                <>
-                    <span>{ item.name.clone() }</span>
-                </>
-            }
-        } else {
-            html! {
-                <>
-                    // <span class="icon"><i class=class></i></span>
-                    <span>{ item.name.clone() }</span>
-                </>
-            }
-        };
+        let item_html = html! { <span>{ item.name.clone() }</span> };
+
+        // let item_html = if is_subitem {
+        //     html! {
+        //         <>
+        //             <span>{ item.name.clone() }</span>
+        //         </>
+        //     }
+        // } else {
+        //     html! {
+        //         <>
+        //             // <span class="icon"><i class=class></i></span>
+        //             <span>{ item.name.clone() }</span>
+        //         </>
+        //     }
+        // };
 
         if url.starts_with("http") {
             html! {
@@ -122,7 +124,7 @@ impl Component for MenuBar {
     }
 
     fn rendered(&mut self, _first_render: bool) {
-    // fn mounted(&mut self) -> ShouldRender {
+        // fn mounted(&mut self) -> ShouldRender {
         // Handle colapse
         // -> when url match .link -> item.expanded = false/
         let path = yew::utils::window()

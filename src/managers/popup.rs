@@ -33,46 +33,48 @@ pub struct PopupManager {
     pub event_bus: Rc<RefCell<Dispatcher<popup_bus::EventBus>>>, //
 }
 
-impl PopupManager {
-    pub fn new() -> Self {
+impl Default for PopupManager {
+    fn default() -> Self {
         PopupManager {
             event_bus: Rc::new(RefCell::new(popup_bus::EventBus::dispatcher())),
         }
     }
+}
 
+impl PopupManager {
     pub fn info<T: Into<String>>(&self, header: T, body: Option<String>) {
         let popup_message = PopupMessage::new_rc(
             header.into(),
-            body.unwrap_or("".to_string()),
+            body.unwrap_or_default(),
             "has-background-info".into(),
         );
         let mut bus = self.event_bus.borrow_mut();
-        bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
-    }    
+        bus.send(popup_bus::InputMsg::NewMessage(popup_message));
+    }
 
     pub fn warn<T: Into<String>>(&self, header: T, body: Option<String>) {
         let popup_message = PopupMessage::new_rc(
             header.into(),
-            body.unwrap_or("".to_string()),
+            body.unwrap_or_default(),
             "has-background-warning".into(),
         );
         let mut bus = self.event_bus.borrow_mut();
-        bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
+        bus.send(popup_bus::InputMsg::NewMessage(popup_message));
     }
 
     pub fn error<T: Into<String>>(&self, header: T, body: Option<String>) {
         let popup_message = PopupMessage::new_rc(
             header.into(),
-            body.unwrap_or("".to_string()),
+            body.unwrap_or_default(),
             "has-background-danger".into(),
         );
         let mut bus = self.event_bus.borrow_mut();
-        bus.send(popup_bus::InputMsg::NewMessage(popup_message.clone()));
+        bus.send(popup_bus::InputMsg::NewMessage(popup_message));
     }
 }
 
 /// Popupmanager is connected using Agent link
-pub struct PopupManagerUI {
+pub struct PopupManagerUi {
     // Data
     messages: Vec<Rc<PopupMessage>>,
     timer_tasks: Vec<Box<dyn Task>>,
@@ -81,19 +83,23 @@ pub struct PopupManagerUI {
     _context: Box<dyn Bridge<popup_bus::EventBus>>,
 }
 
-impl PopupManagerUI {
+impl PopupManagerUi {
     pub fn add_toast(&mut self, toast: Rc<PopupMessage>) {
         self.messages.push(toast);
     }
 
     pub fn remove_first(&mut self) {
-        self.messages.remove(0);
+        if !self.messages.is_empty() {
+            self.messages.remove(0);
+        } else {
+            log::error!("Not possible to remove toast");
+        }
     }
 
     fn view_children(&self) -> Html {
         self.messages.iter().map(|toast| {
             html! {
-                <div class=vec!["c-toasts__item", toast.class_type.as_str()]>
+                <div class=yew::classes!("c-toasts__item", toast.class_type.clone())>
                     <span class="c-toasts__item-header">{ toast.header.clone() }</span>
                     {
                         if ! toast.body.is_empty() {
@@ -114,7 +120,7 @@ pub enum Msg {
     TimerDone,
 }
 
-impl Component for PopupManagerUI {
+impl Component for PopupManagerUi {
     type Message = Msg;
     type Properties = ();
 
@@ -122,7 +128,7 @@ impl Component for PopupManagerUI {
         let callback = link.callback(|message| message);
         let _context = popup_bus::EventBus::bridge(callback);
 
-        PopupManagerUI {
+        PopupManagerUi {
             link,
             messages: Vec::<Rc<PopupMessage>>::new(),
             timer_tasks: Vec::new(),
@@ -146,7 +152,9 @@ impl Component for PopupManagerUI {
                 self.timer_tasks.push(task);
             }
             Msg::TimerDone => {
-                self.timer_tasks.remove(0);
+                if !self.timer_tasks.is_empty() {
+                    let _trash = self.timer_tasks.remove(0);
+                }
                 self.remove_first();
             }
         }

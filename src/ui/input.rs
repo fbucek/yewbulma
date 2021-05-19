@@ -57,10 +57,10 @@ impl Component for TextInput {
     fn view(&self) -> Html {
         html! {
             <input class="input new-client firstname"
-            placeholder=&self.placeholder
-            value=&self.value
+            placeholder=self.placeholder.clone()
+            value=self.value.clone()
             disabled=self.disabled
-            oninput=self.link.callback(|e: InputData| Msg::InputChange(e)) />
+            oninput=self.link.callback(Msg::InputChange) />
 
             // <button class="button is-small" disabled=self.disabled oninput=self.link.callback(|_| Msg::InputChange)>
             //     { &self.value }
