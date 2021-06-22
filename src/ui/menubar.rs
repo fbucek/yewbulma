@@ -11,6 +11,7 @@ pub struct MenuBar {
 
 pub enum Msg {
     ItemClicked(MenuItem),
+    Update,
 }
 
 #[derive(Clone, PartialEq, Properties)]
@@ -123,7 +124,7 @@ impl Component for MenuBar {
         true
     }
 
-    fn rendered(&mut self, _first_render: bool) {
+    fn rendered(&mut self, first_render: bool) {
         // fn mounted(&mut self) -> ShouldRender {
         // Handle colapse
         // -> when url match .link -> item.expanded = false/
@@ -131,17 +132,16 @@ impl Component for MenuBar {
             .location()
             .pathname()
             .unwrap_or_else(|_| "".to_string());
-        log::trace!("checking expanding: path is  {}", &path);
 
         // If any children has matching path -> expand
         for item in &mut self.menu_list {
             for subitem in &item.children {
-                log::trace!("checking expanding: subitem is  {}", &subitem.name);
+                // log::trace!("checking expanding: subitem is  {}", &subitem.name);
 
                 if let Some(link) = &subitem.link {
-                    log::trace!("link is  {}, path is{}", &link, &path);
+                    // log::trace!("link is: {}, path is: {}", &link, &path);
                     if path == *link {
-                        log::trace!("Expanding item: {}", &link);
+                        // log::trace!("Expanding item: {:?} with link: {}", &item.link, &link);
                         item.expanded = true;
                     } else {
                     }
@@ -149,8 +149,9 @@ impl Component for MenuBar {
             }
         }
 
-        log::trace!("not mounted is called");
-        // true
+        if first_render {
+            self.link.send_message(Msg::Update);
+        }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
@@ -176,6 +177,7 @@ impl Component for MenuBar {
                 }
                 true
             }
+            Msg::Update => { true }
         }
     }
 
