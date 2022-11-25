@@ -28,7 +28,7 @@ serde_derive = "1.0"
 
 # Wasm
 yew = "0.17"
-yew-router = "0.14"
+yew-router = "0.17"
 wee_alloc = "0.4"
 
 wasm-bindgen = { version = "0.2", features = ["serde-serialize" ] }
