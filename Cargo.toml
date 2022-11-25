@@ -27,7 +27,7 @@ serde_json = "1.0"
 serde_derive = "1.0"
 
 # Wasm
-yew = "0.17"
+yew = "0.20"
 yew-router = "0.14"
 wee_alloc = "0.4"
 
