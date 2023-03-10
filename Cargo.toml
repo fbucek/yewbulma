@@ -19,7 +19,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 log = "0.4"
-console_log = "0.2"
+console_log = "1.0"
 anyhow = "1.0"
 
 serde = { version = "1.0", features = ["rc"] }
